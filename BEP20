@@ -1,5 +1,11 @@
-pragma solidity 0.5.16;
+// SPDX-License-Identifier: GPL-3.0
 
+pragma solidity >=0.5.16 <0.9.0;
+
+/** 
+ * @title BEP20
+ * @dev Implements Token Kami Coin (KAMI)
+ */
 interface IBEP20 {
   /**
    * @dev Returns the amount of tokens in existence.
@@ -347,12 +353,24 @@ contract BEP20Token is Context, IBEP20, Ownable {
   uint8 private _decimals;
   string private _symbol;
   string private _name;
+  uint256 public _taxFee = 20;
+  uint256 private _previousTaxFee = _taxFee;
+  uint256 public _developmentFee = 10;
+  uint256 private _previousDevelopmentFee = _developmentFee;
+  uint256 public _liquidityFee = 50;
+  uint256 private _previousLiquidityFee = _liquidityFee;
+  address private _developmentWalletAddress = 0xE69Ac38Cd6DA0EA9a540B47399C430131216Ced7;
+  uint256 private constant MAX = ~uint256(0);
+  uint256 private _tTotal = 1000000000000 * 10**18;
+  uint256 private _rTotal = (MAX - (MAX % _tTotal));
+  uint256 private _tFeeTotal;
+
 
   constructor() public {
-    _name = {{TOKEN_NAME}};
-    _symbol = {{TOKEN_SYMBOL}};
-    _decimals = {{DECIMALS}};
-    _totalSupply = {{TOTAL_SUPPLY}};
+    _name = "KamiCoin";
+    _symbol = "Kami";
+    _decimals = 18; 
+    _totalSupply = 1000000000000 * 10**18;
     _balances[msg.sender] = _totalSupply;
 
     emit Transfer(address(0), msg.sender, _totalSupply);
@@ -590,3 +608,5 @@ contract BEP20Token is Context, IBEP20, Ownable {
     _approve(account, _msgSender(), _allowances[account][_msgSender()].sub(amount, "BEP20: burn amount exceeds allowance"));
   }
 }
+
+
